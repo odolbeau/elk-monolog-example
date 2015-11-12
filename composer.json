@@ -1,0 +1,20 @@
+{
+    "name": "odolbeau/elk-monolog-example",
+    "description": "A dumb application to play with logs.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Olivier Dolbeau",
+            "email": "contact@odolbeau.fr"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "^1.17",
+        "symfony/console": "^2.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bab\\": "src/"
+        }
+    }
+}
