@@ -14,6 +14,7 @@ use Gelf\Transport\UdpTransport;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Monolog\Processor\MemoryUsageProcessor;
 use Monolog\Processor\IntrospectionProcessor;
+use Monolog\Processor\PsrLogMessageProcessor;
 
 class LogCommand extends Command
 {
@@ -36,12 +37,14 @@ class LogCommand extends Command
     {
         $output->writeln('<info>Let\'s wear a <comment>bermuda</comment>!</info>');
 
-        $color = $input->getOption('color');
-
         $logger = $this->getLogger($output);
-        $logger->warning("I wear a $color bearmuda.", [
-            'color' => $color
+
+        $logger->warning('I wear a {color} bearmuda.', [
+            'color' => $input->getOption('color')
         ]);
+
+
+
     }
 
     /**
@@ -69,6 +72,7 @@ class LogCommand extends Command
 
         $logger->pushProcessor(new MemoryUsageProcessor(true, false));
         $logger->pushProcessor(new IntrospectionProcessor());
+        $logger->pushProcessor(new PsrLogMessageProcessor());
 
         return $logger;
     }
