@@ -11,6 +11,7 @@ use Monolog\Logger;
 use Monolog\Handler\GelfHandler;
 use Gelf\Publisher;
 use Gelf\Transport\UdpTransport;
+use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 
 class LogCommand extends Command
 {
@@ -32,17 +33,20 @@ class LogCommand extends Command
     {
         $output->writeln('<info>Let\'s wear a <comment>bermuda</comment>!</info>');
 
-        $logger = $this->getLogger();
+        $logger = $this->getLogger($output);
         $logger->warning('I wear a bearmuda.');
     }
 
     /**
      * getLogger
      *
+     * @param OutputInterface $output
+     *
      * @return LoggerInterface
      */
-    protected function getLogger()
+    protected function getLogger(OutputInterface $output)
     {
+
         $logger = new Logger('demonstration');
         $logger->pushHandler(
             new GelfHandler(
@@ -51,6 +55,11 @@ class LogCommand extends Command
                 )
             )
         );
+
+        $logger->pushHandler(
+            new ConsoleHandler($output)
+        );
+
 
         return $logger;
     }

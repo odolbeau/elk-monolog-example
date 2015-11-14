@@ -11,7 +11,9 @@
     "require": {
         "monolog/monolog": "^1.17",
         "symfony/console": "^2.7",
-        "graylog2/gelf-php": "^1.4"
+        "graylog2/gelf-php": "^1.4",
+        "symfony/monolog-bridge": "^2.7",
+        "symfony/event-dispatcher": "^2.7"
     },
     "autoload": {
         "psr-4": {
