@@ -39,7 +39,9 @@ class LogCommand extends Command
         $color = $input->getOption('color');
 
         $logger = $this->getLogger($output);
-        $logger->warning("I wear a $color bearmuda.");
+        $logger->warning("I wear a $color bearmuda.", [
+            'color' => $color
+        ]);
     }
 
     /**
