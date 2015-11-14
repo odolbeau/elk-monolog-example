@@ -12,6 +12,7 @@ use Monolog\Handler\GelfHandler;
 use Gelf\Publisher;
 use Gelf\Transport\UdpTransport;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
+use Monolog\Processor\MemoryUsageProcessor;
 
 class LogCommand extends Command
 {
@@ -23,6 +24,7 @@ class LogCommand extends Command
         $this
             ->setName('log')
             ->setDescription('Log something!')
+            ->addOption('color', 'c', InputOption::VALUE_REQUIRED, 'Choose a color!', 'random')
         ;
     }
 
@@ -33,8 +35,10 @@ class LogCommand extends Command
     {
         $output->writeln('<info>Let\'s wear a <comment>bermuda</comment>!</info>');
 
+        $color = $input->getOption('color');
+
         $logger = $this->getLogger($output);
-        $logger->warning('I wear a bearmuda.');
+        $logger->warning("I wear a $color bearmuda.");
     }
 
     /**
@@ -46,8 +50,8 @@ class LogCommand extends Command
      */
     protected function getLogger(OutputInterface $output)
     {
-
         $logger = new Logger('demonstration');
+
         $logger->pushHandler(
             new GelfHandler(
                 new Publisher(
@@ -60,6 +64,7 @@ class LogCommand extends Command
             new ConsoleHandler($output)
         );
 
+        $logger->pushProcessor(new MemoryUsageProcessor(true, false));
 
         return $logger;
     }
