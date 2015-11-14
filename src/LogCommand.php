@@ -26,6 +26,7 @@ class LogCommand extends Command
         $this
             ->setName('log')
             ->setDescription('Log something!')
+            ->addArgument('clothing', InputArgument::OPTIONAL, 'What are you wearing?', 'bermuda')
             ->addOption('color', 'c', InputOption::VALUE_REQUIRED, 'Choose a color!', 'random')
         ;
     }
@@ -35,12 +36,15 @@ class LogCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('<info>Let\'s wear a <comment>bermuda</comment>!</info>');
+        $clothing = $input->getArgument('clothing');
 
-        $logger = $this->getLogger($output);
+        $output->writeln("<info>Let's wear a <comment>$clothing</comment>!</info>");
 
-        $logger->warning('I wear a {color} bearmuda.', [
-            'color' => $input->getOption('color')
+        $logger = $this->getLogger($output, $clothing);
+
+        $logger->warning('I wear a {color} {clothing}.', [
+            'color' => $input->getOption('color'),
+            'clothing' => $clothing
         ]);
 
 
@@ -51,12 +55,13 @@ class LogCommand extends Command
      * getLogger
      *
      * @param OutputInterface $output
+     * @param string $clothing
      *
      * @return LoggerInterface
      */
-    protected function getLogger(OutputInterface $output)
+    protected function getLogger(OutputInterface $output, $clothing)
     {
-        $logger = new Logger('demonstration');
+        $logger = new Logger($clothing);
 
         $logger->pushHandler(
             new GelfHandler(
@@ -66,9 +71,11 @@ class LogCommand extends Command
             )
         );
 
-        $logger->pushHandler(
-            new ConsoleHandler($output)
-        );
+        if ('bermuda' === $clothing) {
+            $logger->pushHandler(
+                new ConsoleHandler($output)
+            );
+        }
 
         $logger->pushProcessor(new MemoryUsageProcessor(true, false));
         $logger->pushProcessor(new IntrospectionProcessor());
