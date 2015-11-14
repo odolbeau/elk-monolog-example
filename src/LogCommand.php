@@ -13,6 +13,7 @@ use Gelf\Publisher;
 use Gelf\Transport\UdpTransport;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Monolog\Processor\MemoryUsageProcessor;
+use Monolog\Processor\IntrospectionProcessor;
 
 class LogCommand extends Command
 {
@@ -65,6 +66,7 @@ class LogCommand extends Command
         );
 
         $logger->pushProcessor(new MemoryUsageProcessor(true, false));
+        $logger->pushProcessor(new IntrospectionProcessor());
 
         return $logger;
     }
